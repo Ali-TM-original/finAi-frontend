@@ -23,14 +23,15 @@ const InitialLayout = () => {
   useEffect(() => {
     console.log(isSignedIn);
     if (!isLoaded) return;
-
+    console.log(segments);
     const inAuthGroup = segments[0] === "(auth)";
     console.log("useEffect InAuthGroup: ", inAuthGroup);
     console.log("useEffect IsSignedIn: ", isSignedIn);
 
     if (isSignedIn && !inAuthGroup) {
-      router.replace("/(auth)");
-    } else if (!isSignedIn) {
+      router.replace("/(auth)/(drawer)/(chat)/new");
+    } else if (!isSignedIn && inAuthGroup) {
+      console.log("Going Back");
       router.replace("/");
     }
   }, [isSignedIn]);
@@ -56,7 +57,7 @@ const InitialLayout = () => {
   );
 };
 
-export default function RootLayout() {
+const RootLayoutNav = () => {
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
       <GestureHandlerRootView style={{ flex: 1 }}>
@@ -64,4 +65,6 @@ export default function RootLayout() {
       </GestureHandlerRootView>
     </ClerkProvider>
   );
-}
+};
+
+export default RootLayoutNav;
