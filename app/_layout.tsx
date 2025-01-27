@@ -3,6 +3,7 @@ import { Stack, useRouter, useSegments, Slot } from "expo-router";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { tokenCache } from "@/utils/cache";
+import { View, ActivityIndicator } from "react-native";
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
@@ -20,9 +21,12 @@ const InitialLayout = () => {
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
 
   useEffect(() => {
+    console.log(isSignedIn);
     if (!isLoaded) return;
 
     const inAuthGroup = segments[0] === "(auth)";
+    console.log("useEffect InAuthGroup: ", inAuthGroup);
+    console.log("useEffect IsSignedIn: ", isSignedIn);
 
     if (isSignedIn && !inAuthGroup) {
       router.replace("/(auth)");
@@ -32,7 +36,11 @@ const InitialLayout = () => {
   }, [isSignedIn]);
 
   if (!isLoaded) {
-    return <Slot />;
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator size="large" color="#000" />
+      </View>
+    );
   }
 
   return (
