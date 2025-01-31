@@ -2,6 +2,8 @@ import { View, Text, StyleSheet, TextInput } from "react-native";
 import React, { useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
+  Extrapolation,
+  interpolate,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -10,6 +12,8 @@ import { BlurView } from "expo-blur";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
+// import * as DocumentPicker from "expo-document-picker";
+// import * as ImagePicker from "expo-image-picker";
 
 const ATouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
 
@@ -23,7 +27,7 @@ const MessageInput = ({ onShouldSendMessage }: MessageInputProps) => {
   const { bottom } = useSafeAreaInsets();
   const expanded = useSharedValue(0);
 
-  const expantItems = () => {
+  const expandItems = () => {
     expanded.value = withTiming(1, { duration: 400 });
   };
 
@@ -41,20 +45,42 @@ const MessageInput = ({ onShouldSendMessage }: MessageInputProps) => {
     setMessage("");
   };
 
-  const expandedButtonStyle = useAnimatedStyle(() => {
+  const expandButtonStyle = useAnimatedStyle(() => {
+    const opacityInterpolation = interpolate(
+      expanded.value,
+      [0, 1],
+      [1, 0],
+      Extrapolation.CLAMP
+    );
+    const widthInterpolation = interpolate(
+      expanded.value,
+      [0, 1],
+      [30, 0],
+      Extrapolation.CLAMP
+    );
+
     return {
-      opacity: expanded.value,
-      transform: [{ scale: expanded.value }],
+      opacity: opacityInterpolation,
+      width: widthInterpolation,
     };
   });
 
   const buttonViewStyle = useAnimatedStyle(() => {
+    const widthInterpolation = interpolate(
+      expanded.value,
+      [0, 1],
+      [0, 100],
+      Extrapolation.CLAMP
+    );
     return {
+      width: widthInterpolation,
       opacity: expanded.value,
     };
   });
 
-  const capAudio = () => {};
+  const capAudio = () => {
+    // TODO
+  };
 
   return (
     <BlurView
@@ -64,14 +90,24 @@ const MessageInput = ({ onShouldSendMessage }: MessageInputProps) => {
     >
       <View style={styles.row}>
         <ATouchableOpacity
-          onPress={expantItems}
-          style={[styles.roundBtn, expandedButtonStyle]}
+          onPress={expandItems}
+          style={[styles.roundBtn, expandButtonStyle]}
         >
           <Ionicons name="add" size={24} color={Colors.grey} />
         </ATouchableOpacity>
 
         <Animated.View style={[styles.buttonView, buttonViewStyle]}>
-          {/* TODO */}
+          <TouchableOpacity onPress={() => {}}>
+            <Ionicons name="camera-outline" size={24} color={Colors.grey} />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => {}}>
+            <Ionicons name="image-outline" size={24} color={Colors.grey} />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => {}}>
+            <Ionicons name="folder-outline" size={24} color={Colors.grey} />
+          </TouchableOpacity>
         </Animated.View>
 
         <TextInput
@@ -79,7 +115,7 @@ const MessageInput = ({ onShouldSendMessage }: MessageInputProps) => {
           placeholder="Prompt"
           multiline
           value={message}
-          onChangeText={setMessage}
+          onChangeText={onChangeText}
           style={styles.messageInput}
           onFocus={collapseItems}
         />
