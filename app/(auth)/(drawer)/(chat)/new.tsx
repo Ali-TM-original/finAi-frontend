@@ -58,14 +58,14 @@ const Page = () => {
 
   return (
     <View style={defaultStyles.pageContainer}>
-      <View style={{ flex: 1 }} onLayout={onLayout}>
+      <View style={styles.page} onLayout={onLayout}>
         {/* <Button title="Sign Out" onPress={() => signOut()} /> */}
         {/* <ScrollView>
           {Array.from({ length: 100 }).map((_, index) => (
             <Text key={index}>1</Text>
           ))}
         </ScrollView> */}
-        {messages.length === 0 && (
+        {messages.length == 0 && (
           <View style={[styles.logoContainer, { marginTop: height / 2 - 100 }]}>
             <Image
               source={require("@/assets/images/icon.png")}
@@ -76,7 +76,9 @@ const Page = () => {
         <FlashList
           data={messages}
           renderItem={({ item }) => <ChatMessage {...item} />}
-          estimatedItemSize={200}
+          estimatedItemSize={messages.length}
+          contentContainerStyle={{ paddingTop: 30, paddingBottom: 150 }}
+          keyboardDismissMode="on-drag"
         />
       </View>
       <KeyboardAvoidingView

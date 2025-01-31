@@ -12,8 +12,8 @@ import { BlurView } from "expo-blur";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
-// import * as DocumentPicker from "expo-document-picker";
-// import * as ImagePicker from "expo-image-picker";
+import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
 
 const ATouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
 
@@ -97,15 +97,17 @@ const MessageInput = ({ onShouldSendMessage }: MessageInputProps) => {
         </ATouchableOpacity>
 
         <Animated.View style={[styles.buttonView, buttonViewStyle]}>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => ImagePicker.launchCameraAsync()}>
             <Ionicons name="camera-outline" size={24} color={Colors.grey} />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity
+            onPress={() => ImagePicker.launchImageLibraryAsync()}
+          >
             <Ionicons name="image-outline" size={24} color={Colors.grey} />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => DocumentPicker.getDocumentAsync()}>
             <Ionicons name="folder-outline" size={24} color={Colors.grey} />
           </TouchableOpacity>
         </Animated.View>
